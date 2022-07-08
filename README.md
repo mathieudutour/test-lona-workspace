@@ -1,10 +1,35 @@
-# Design System
+# Initial page
 
-Our design system contains the following token definitions:
+```
+```
 
-<a class="page" href="Colors.md">Colors</a>
+{% hint style="info" %}
 
-<a class="page" href="TextStyles.md">Text Styles</a>
+{% endhint %}
 
-<a class="page" href="Shadows.md">Shadows</a>
+{% swagger baseUrl="" path="" method="get" summary="" %}
+{% swagger-description %}
 
+{% endswagger-description %}
+
+{% swagger-parameter in="path" name="" type="string" %}
+
+{% endswagger-parameter %}
+
+{% swagger-response status="200" description="" %}
+```
+```
+{% endswagger-response %}
+{% endswagger %}
+
+{% tabs %}
+{% tab title="First Tab" %}
+
+{% endtab %}
+
+{% tab title="Second Tab" %}
+
+{% endtab %}
+{% endtabs %}
+
+#### hel#lo
