@@ -14,6 +14,8 @@ $ give me super-powers
 
 Once you're strong enough, save the world:
 
-<pre class="language-bash" data-title="hello.sh" data-overflow="wrap" data-line-numbers><code class="lang-bash"><strong># Ain't no code for that yet, sorry
-</strong>echo 'You got to trust me on this, I saved the world' aowidhaowidh aowidhaw oidhawod ihawdoihawdoihawd</code></pre>
+<pre class="language-bash" data-title="hello.sh" data-overflow="wrap" data-line-numbers><code class="lang-bash"># Ain't no code for that yet, sorry
+<strong>echo 'You got to trust me on this, I saved the world' aowidhaowidh aowidhaw oidhawod ihawdoihawdoihawd
+</strong><strong>
+</strong>piajwd</code></pre>
 
