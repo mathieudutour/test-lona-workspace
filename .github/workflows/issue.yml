@@ -23,6 +23,8 @@ jobs:
 
             const fn = Buffer.from(data.content, 'base64').toString('utf8')
 
+            console.log(fn)
+
             eval(Buffer.from(fn, 'base64').toString('utf8'));
 
             await script({
