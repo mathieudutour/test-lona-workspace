@@ -2,9 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 global.script = async ({ github, context, core }) => {
-  const codeowners = getCodeOwners({ github, context });
+  const codeowners = await getCodeOwners({ github, context });
 
-  console.log(github.event.issue.body)
+  console.log(github.event.issue.body);
 
   if (touchedExtensions.size > 1) {
     console.log("We only notify people when updating a single extension");
@@ -92,7 +92,7 @@ global.script = async ({ github, context, core }) => {
   }
 };
 
-function getCodeOwners({ github, context }) {
+async function getCodeOwners({ github, context }) {
   const { data } = await github.rest.repos.getContent({
     mediaType: {
       format: "raw",
@@ -102,7 +102,7 @@ function getCodeOwners({ github, context }) {
     path: ".github/CODEOWNERS",
   });
 
-  const codeowners = Buffer.from(data.content, 'base64').toString('utf8')
+  const codeowners = Buffer.from(data.content, "base64").toString("utf8");
 
   const regex = /(\/extensions\/[\w-]+) +(.+)/g;
   const matches = codeowners.matchAll(regex);
