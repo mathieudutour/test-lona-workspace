@@ -93,7 +93,7 @@ global.script = async ({ github, context, core }) => {
 };
 
 function getCodeOwners({ github, context }) {
-  const { data: codeowners } = await github.rest.repos.getContent({
+  const { data } = await github.rest.repos.getContent({
     mediaType: {
       format: "raw",
     },
@@ -101,6 +101,8 @@ function getCodeOwners({ github, context }) {
     repo: context.repo.repo,
     path: ".github/CODEOWNERS",
   });
+
+  const codeowners = Buffer.from(data.content, 'base64').toString('utf8')
 
   const regex = /(\/extensions\/[\w-]+) +(.+)/g;
   const matches = codeowners.matchAll(regex);
