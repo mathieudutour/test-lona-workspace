@@ -4,7 +4,7 @@ const path = require("path");
 module.exports = async ({ github, context, core }) => {
   const codeowners = await getCodeOwners({ github, context });
 
-  console.log(github.event.issue.body);
+  console.log(context);
 
   if (touchedExtensions.size > 1) {
     console.log("We only notify people when updating a single extension");
