@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const script = async ({ github, context, core }) => {
+global.script = async ({ github, context, core }) => {
   const codeowners = getCodeOwners({ github, context });
 
   console.log(github.event.issue.body)

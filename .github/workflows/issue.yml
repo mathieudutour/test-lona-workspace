@@ -21,6 +21,8 @@ jobs:
               path: "scripts/issue-bot.js",
             });
 
+            console.log(fn)
+
             eval(fn);
 
             await script({
