@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-global.script = async ({ github, context, core }) => {
+module.exports = async ({ github, context, core }) => {
   const codeowners = await getCodeOwners({ github, context });
 
   console.log(github.event.issue.body);

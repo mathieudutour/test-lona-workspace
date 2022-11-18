@@ -21,12 +21,10 @@ jobs:
               path: "scripts/issue-bot.js",
             });
 
-            const fn = Buffer.from(data.content, 'base64').toString('utf8')
+            const fn = Buffer.from(data.content, 'base64')
+            require('fs').writeFileSync('./issue-bot.js', fn)
 
-            console.log(fn)
-
-            eval(Buffer.from(fn, 'base64').toString('utf8'));
-
+            const script = require('./issue-bot')
             await script({
               github,
               context,
