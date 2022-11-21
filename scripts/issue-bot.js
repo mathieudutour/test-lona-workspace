@@ -42,6 +42,8 @@ module.exports = async ({ github, context, core }) => {
 
   const owners = codeowners[ext];
 
+  console.log(owners);
+
   if (!owners) {
     // it's a new extension
     console.log(`cannot find existing extension ${ext}`);
