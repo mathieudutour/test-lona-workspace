@@ -12,7 +12,15 @@ jobs:
         with:
           github-token: ${{ secrets.RAYCAST_BOT_API_ACCESS_TOKEN }}
           script: |
-            console.log(context)
+            if (context.payload.label.name.startsWith('extension: ')) {
+              await github.rest.issues.updateLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: context.payload.label.name,
+                color: '808080',
+                description: 'Issues related to the ' + context.payload.label.name.replace('extension: ', '') + ' extension'
+              })
+            }
 
       # - name: Notify Failure to Slack
       #   if: failure()
