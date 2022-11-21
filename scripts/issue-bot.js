@@ -40,9 +40,9 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  const owners = codeowners[ext];
+  const owners = codeowners[`/extensions/${ext}`];
 
-  console.log(codeowners);
+  console.log(owners);
 
   if (!owners) {
     // it's a new extension
