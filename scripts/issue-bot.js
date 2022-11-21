@@ -57,6 +57,13 @@ module.exports = async ({ github, context, core }) => {
     labels: [`extension: ${ext}`],
   });
 
+  await github.rest.issues.removeLabel({
+    issue_number: context.payload.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    name: "status: stalled",
+  });
+
   await comment({
     github,
     context,
