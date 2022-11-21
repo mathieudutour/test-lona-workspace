@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const newMatch = /### Extension\s*https:\/\/raycast\.com\/([^\/]+)\/([^\/\s]+)/;
+const newMatch =
+  /### Extension\s*https:\/\/www.raycast\.com\/([^\/]+)\/([^\/\s]+)/;
 
 // TODO: - check labels to see if we are dealing with an extension issue
 // - if there are no labels -> error
