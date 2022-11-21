@@ -10,6 +10,9 @@ const newMatch = /### Extension\s*https:\/\/raycast\.com\/([^\/]+)\/([^\/\s]+)/;
 module.exports = async ({ github, context, core }) => {
   const codeowners = await getCodeOwners({ github, context });
 
+  console.log(context.payload.issue.body);
+  console.log(newMatch.exec(context.payload.issue.body));
+
   const [, owner, ext] = newMatch.exec(context.payload.issue.body) || [];
 
   if (!ext) {
