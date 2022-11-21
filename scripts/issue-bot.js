@@ -1,13 +1,29 @@
 const fs = require("fs");
 const path = require("path");
 
+const newMatch = /### Extension\s*https:\/\/raycast\.com\/([^\/]+)\/([^\/\s]+)/;
+
+// TODO: - check labels to see if we are dealing with an extension issue
+// - if there are no labels -> error
+// - check the title if it's filled up
+
 module.exports = async ({ github, context, core }) => {
   const codeowners = await getCodeOwners({ github, context });
 
-  console.log(context);
+  const [, owner, ext] = newMatch.exec(context.payload.issue.body) || [];
 
-  if (touchedExtensions.size > 1) {
-    console.log("We only notify people when updating a single extension");
+  if (!ext) {
+    await comment({
+      github,
+      context,
+      comment: `We could not find the extension related to this issue. Please fill update the issue with the link to the extension.`,
+    });
+    await github.rest.issues.addLabels({
+      issue_number: context.payload.issue.number,
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      labels: ["status: stalled"],
+    });
     return;
   }
 
@@ -20,76 +36,29 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  const opts = github.rest.issues.listForRepo.endpoint.merge({
-    ...context.issue,
-    creator: sender,
-    state: "all",
-  });
-  const issues = await github.paginate(opts);
+  const owners = codeowners[ext];
 
-  const isFirstContribution = issues.every(
-    (issue) => issue.number === context.issue.number || !issue.pull_request
-  );
-
-  for (const ext of touchedExtensions) {
-    const owners = codeowners[ext];
-
-    if (!owners) {
-      // it's a new extension
-      console.log(`cannot find existing extension ${ext}`);
-      await github.rest.issues.addLabels({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        labels: ["new extension"],
-      });
-      await comment({
-        github,
-        context,
-        comment: `Congratulation on your new Raycast extension! :rocket:\n\nWe will review it shortly. Once the PR is approved and merged, the extension will be available on the Store.`,
-      });
-      return;
-    }
-
-    await github.rest.issues.addLabels({
-      issue_number: context.issue.number,
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      labels: ["extension fix / improvement"],
-    });
-
-    if (owners[0] === sender) {
-      await github.rest.issues.addLabels({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        labels: ["OP is author"],
-      });
-      return;
-    }
-
-    if (owners.indexOf(sender) !== -1) {
-      await github.rest.issues.addLabels({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        labels: ["OP is contributor"],
-      });
-    }
-
-    await comment({
-      github,
-      context,
-      comment: `Thank you for your ${
-        isFirstContribution ? "first " : ""
-      } contribution! :tada:\n\n🔔 ${owners
-        .filter((x) => x !== sender)
-        .map((x) => `@${x}`)
-        .join(" ")} you might want to have a look.`,
-    });
-
+  if (!owners) {
+    // it's a new extension
+    console.log(`cannot find existing extension ${ext}`);
     return;
   }
+
+  await github.rest.issues.addLabels({
+    issue_number: context.payload.issue.number,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    labels: [`extension: ${ext}`],
+  });
+
+  await comment({
+    github,
+    context,
+    comment: `Thank you for opening this issue!\n\n🔔 ${owners
+      .filter((x) => x !== sender)
+      .map((x) => `@${x}`)
+      .join(" ")} you might want to have a look.`,
+  });
 };
 
 async function getCodeOwners({ github, context }) {
