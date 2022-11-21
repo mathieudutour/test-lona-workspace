@@ -57,18 +57,24 @@ module.exports = async ({ github, context, core }) => {
     labels: [`extension: ${ext}`],
   });
 
-  await github.rest.issues.removeLabel({
-    issue_number: context.payload.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    name: "status: stalled",
-  });
+  if (context.payload.issue.labels.some((x) => x.name === "status: stalled")) {
+    await github.rest.issues.removeLabel({
+      issue_number: context.payload.issue.number,
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      name: "status: stalled",
+    });
+  }
 
+  const toNotify = owners.filter((x) => x !== sender);
+
+  if (!toNotify.length) {
+    return;
+  }
   await comment({
     github,
     context,
-    comment: `Thank you for opening this issue!\n\n🔔 ${owners
-      .filter((x) => x !== sender)
+    comment: `Thank you for opening this issue!\n\n🔔 ${toNotify
       .map((x) => `@${x}`)
       .join(" ")} you might want to have a look.`,
   });
