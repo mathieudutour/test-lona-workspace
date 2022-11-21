@@ -6,10 +6,6 @@ const newMatch =
 const oldMatch =
   /# Extension – \[([^\]]+)\]\(https:\/\/github\.com\/raycast\/extensions\/[^\s]*extensions\/([^\/\s]+)\/\)/;
 
-// TODO: - check labels to see if we are dealing with an extension issue
-// - if there are no labels -> error
-// - check the title if it's filled up
-
 module.exports = async ({ github, context, core }) => {
   const sender = context.payload.sender.login;
 
@@ -18,7 +14,10 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  console.log(context.payload.issue);
+  if (context.payload.issue.labels.every((x) => x.name !== "extension")) {
+    console.log("We only deal with extension issues");
+    return;
+  }
 
   const codeowners = await getCodeOwners({ github, context });
 

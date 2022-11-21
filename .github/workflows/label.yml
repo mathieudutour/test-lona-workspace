@@ -5,7 +5,7 @@ on:
 jobs:
   issue_open:
     name: Label created
-    if: github.repository == 'raycast/extensions'
+    # if: github.repository == 'raycast/extensions'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/github-script@v6
