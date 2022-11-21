@@ -42,7 +42,7 @@ module.exports = async ({ github, context, core }) => {
 
   const owners = codeowners[ext];
 
-  console.log(owners);
+  console.log(codeowners);
 
   if (!owners) {
     // it's a new extension
