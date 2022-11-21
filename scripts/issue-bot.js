@@ -3,18 +3,31 @@ const path = require("path");
 
 const newMatch =
   /### Extension\s*https:\/\/www.raycast\.com\/([^\/]+)\/([^\/\s]+)/;
+const oldMatch =
+  /# Extension – \[([^\]]+)\]\(https:\/\/github\.com\/raycast\/extensions\/[^\s]*extensions\/([^\/\s]+)\/\)/;
 
 // TODO: - check labels to see if we are dealing with an extension issue
 // - if there are no labels -> error
 // - check the title if it's filled up
 
 module.exports = async ({ github, context, core }) => {
+  const sender = context.payload.sender.login;
+
+  if (sender === "raycastbot" || sender === "stale") {
+    console.log("We don't notify people when the bots are doing their stuff");
+    return;
+  }
+
+  console.log(context.payload.issue);
+
   const codeowners = await getCodeOwners({ github, context });
 
-  console.log(context.payload.issue.body);
-  console.log(newMatch.exec(context.payload.issue.body));
+  console.log(context.payload.issue);
 
-  const [, owner, ext] = newMatch.exec(context.payload.issue.body) || [];
+  const [, , ext] =
+    newMatch.exec(context.payload.issue.body) ||
+    oldMatch.exec(context.payload.issue.body) ||
+    [];
 
   if (!ext) {
     await comment({
@@ -31,21 +44,9 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  const sender = context.payload.sender.login;
-
-  if (sender === "raycastbot") {
-    console.log(
-      "We don't notify people when raycastbot is doing its stuff (usually merging the PR)"
-    );
-    return;
-  }
-
   const owners = codeowners[`/extensions/${ext}`];
 
-  console.log(owners);
-
   if (!owners) {
-    // it's a new extension
     console.log(`cannot find existing extension ${ext}`);
     return;
   }
